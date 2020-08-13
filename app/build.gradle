@@ -1,0 +1,91 @@
+apply from: "$rootDir/build-systems/dependencies.gradle"
+
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
+
+android {
+    compileSdkVersion appConfig.sdkTarget
+    buildToolsVersion appConfig.buildToolsV
+
+    defaultConfig {
+        applicationId appConfig.appId
+        minSdkVersion appConfig.sdkMin
+        targetSdkVersion appConfig.sdkTarget
+        versionCode appConfig.buildNumber
+        versionName appConfig.nameVersion
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "BASE_API_URL", '"https://api.github.com/"')
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    buildFeatures {
+        viewBinding = true
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation kotlinLibrary.languagePluginX
+    implementation kotlinLibrary.extCoreX
+
+    implementation androidSupportLibrary.activityExt
+    implementation androidSupportLibrary.appCompatX
+    implementation androidSupportLibrary.swipeX
+    implementation androidSupportLibrary.designX
+    implementation androidSupportLibrary.constraintX
+
+    implementation diLibrary.dagger
+    implementation diLibrary.daggerHiltAndroid
+    implementation diLibrary.daggerHiltAndroidTest
+    implementation diLibrary.hiltCommon
+    implementation diLibrary.hiltViewModel
+    kapt diLibrary.daggerCompiler
+    kapt diLibrary.daggerHiltAndroidCompilerKapt
+    kapt diLibrary.hiltCompiler
+    androidTestImplementation diLibrary.daggerHiltAndroidTestImpl
+    kaptAndroidTest diLibrary.daggerHiltAndroidCompilerKapt
+
+    implementation aacLibrary.lifecycleJava8
+    implementation aacLibrary.lifecycleVmExt
+
+    implementation kotlinLibrary.coroutinesCoreX
+    implementation kotlinLibrary.coroutinesAndroidX
+
+    implementation squareLibrary.okHttpIntcpt
+    implementation squareLibrary.retrofit
+    implementation squareLibrary.moshiConverter
+    implementation squareLibrary.moshi
+    kapt squareLibrary.moshiCodegen
+
+    implementation 'com.github.irfanirawansukirman:history-extensions:0.0.5'
+    implementation 'com.github.mancj:MaterialSearchBar:0.8.5'
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+}
