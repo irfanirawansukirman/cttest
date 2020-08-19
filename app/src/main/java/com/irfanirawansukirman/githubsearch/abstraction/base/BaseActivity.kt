@@ -5,24 +5,47 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
-import kotlinx.android.synthetic.main.activity_main.view.*
+import com.irfanirawansukirman.extensions.showSnackBar
+import com.irfanirawansukirman.extensions.subscribe
+import com.irfanirawansukirman.githubsearch.abstraction.ui.UIState
+import com.irfanirawansukirman.githubsearch.abstraction.ui.UIState.Status.ERROR
+import com.irfanirawansukirman.githubsearch.abstraction.ui.UIState.Status.TIMEOUT
+import kotlinx.android.synthetic.main.main_activity.view.*
 
-abstract class BaseActivity<VB : ViewBinding>(private val viewBinder: (LayoutInflater) -> ViewBinding) :
+@Suppress("UNCHECKED_CAST")
+abstract class BaseActivity<VM : BaseViewModel, VB : ViewBinding>(viewBinder: (LayoutInflater) -> ViewBinding) :
     AppCompatActivity() {
 
-    val mViewBinding by lazy { viewBinder.invoke(layoutInflater) as VB }
+    lateinit var viewModel: VM
+
+    val viewBinding by lazy(LazyThreadSafetyMode.NONE) { viewBinder.invoke(layoutInflater) as VB }
 
     private var mToolbar: Toolbar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(mViewBinding.root)
+        setContentView(viewBinding.root)
         setupToolbar()
+        setupViewModel()
         onFirstLaunch(savedInstanceState)
         setupViewListener()
         loadObservers()
+
+        // load base message
+        viewModel.apply {
+            errorException.subscribe(this@BaseActivity, ::showErrorMessage)
+            timeoutException.subscribe(this@BaseActivity, ::showErrorMessage)
+            ioException.subscribe(this@BaseActivity, ::showErrorMessage)
+            uiException.subscribe(this@BaseActivity) { onShowErrorPage(it["error_type"] ?: 0) }
+        }
     }
+
+    /**
+     * @return viewModel class for base to setup.
+     */
+    protected abstract fun getVMClass(): Class<VM>
 
     /**
      * Function for load livedata observer from viewmodel
@@ -57,6 +80,10 @@ abstract class BaseActivity<VB : ViewBinding>(private val viewBinder: (LayoutInf
      */
     abstract fun bindToolbar(): Toolbar?
 
+    abstract fun onRetry()
+
+    abstract fun onShowErrorPage(errorType: Int)
+
     override fun onStart() {
         super.onStart()
         continuousCall()
@@ -90,14 +117,45 @@ abstract class BaseActivity<VB : ViewBinding>(private val viewBinder: (LayoutInf
         }
     }
 
+    private fun setupViewModel() {
+        if (!::viewModel.isInitialized) {
+            viewModel = ViewModelProvider(this).get(getVMClass())
+        }
+    }
+
     fun showProgress() {
-        mViewBinding.root.progress.isRefreshing = true
+        viewBinding.root.progress.isRefreshing = true
     }
 
     fun hideProgress() {
-        mViewBinding.root.progress.isRefreshing = false
+        viewBinding.root.progress.isRefreshing = false
+    }
+
+    private fun showErrorMessage(state: UIState<String>) {
+        when (state.status) {
+            ERROR -> validateError(state.error)
+            TIMEOUT -> validateError(state.error)
+        }
+    }
+
+    private fun validateError(errorMessage: String) {
+        showSnackBar(viewBinding.root, getFilterErrorMessage(errorMessage), "Retry") { onRetry() }
     }
 
     fun getParentToolbar(): Toolbar? = mToolbar
+
+    private fun getFilterErrorMessage(errorMessage: String): String {
+        return when {
+            errorMessage.toLowerCase().contains("403") -> {
+                "Request is over. Please try again later."
+            }
+            errorMessage.toLowerCase().contains("422") -> {
+                "Search paramater can't be blank."
+            }
+            else -> {
+                errorMessage
+            }
+        }
+    }
 
 }

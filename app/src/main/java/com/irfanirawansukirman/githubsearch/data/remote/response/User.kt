@@ -1,7 +1,7 @@
 package com.irfanirawansukirman.githubsearch.data.remote.response
 
-import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
 
 @JsonClass(generateAdapter = true)
@@ -53,5 +53,29 @@ data class Item(
     @Json(name = "type")
     val type: String?,
     @Json(name = "url")
-    val url: String?
-)
+    val url: String?,
+    var viewType: Int = 0
+) {
+    constructor() : this(
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        0,
+        "",
+        "",
+        "",
+        "",
+        "",
+        0.0,
+        false,
+        "",
+        "",
+        "",
+        "",
+        1
+    )
+}

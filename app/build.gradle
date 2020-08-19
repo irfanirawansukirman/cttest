@@ -53,6 +53,7 @@ dependencies {
     implementation kotlinLibrary.extCoreX
 
     implementation androidSupportLibrary.activityExt
+    implementation "androidx.fragment:fragment-ktx:1.2.5"
     implementation androidSupportLibrary.appCompatX
     implementation androidSupportLibrary.swipeX
     implementation androidSupportLibrary.designX
@@ -63,6 +64,7 @@ dependencies {
     implementation diLibrary.daggerHiltAndroidTest
     implementation diLibrary.hiltCommon
     implementation diLibrary.hiltViewModel
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     kapt diLibrary.daggerCompiler
     kapt diLibrary.daggerHiltAndroidCompilerKapt
     kapt diLibrary.hiltCompiler
@@ -71,6 +73,8 @@ dependencies {
 
     implementation aacLibrary.lifecycleJava8
     implementation aacLibrary.lifecycleVmExt
+    implementation "androidx.lifecycle:lifecycle-runtime:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
 
     implementation kotlinLibrary.coroutinesCoreX
     implementation kotlinLibrary.coroutinesAndroidX
@@ -83,6 +87,7 @@ dependencies {
 
     implementation 'com.github.irfanirawansukirman:history-extensions:0.0.5'
     implementation 'com.github.mancj:MaterialSearchBar:0.8.5'
+    implementation 'com.github.Ferfalk:SimpleSearchView:0.1.6'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

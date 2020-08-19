@@ -165,7 +165,7 @@ ext {
     koinExtLibV = '2.0.1'
     koinTestLlibV = '2.0.1'
     daggerLibV = '2.28.3'
-    daggerHiltAndroidLibV = '2.28.3-alpha'
+    daggerHiltAndroidLibV = '2.28-alpha' //'2.28.3-alpha'
     daggerHiltLibV = '1.0.0-alpha02'
     //==================================
     diLibrary = [
