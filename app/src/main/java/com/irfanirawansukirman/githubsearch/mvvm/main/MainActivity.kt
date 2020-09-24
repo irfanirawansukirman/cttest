@@ -24,8 +24,10 @@ import com.irfanirawansukirman.githubsearch.abstraction.util.Const.GITHUB_USER_L
 import com.irfanirawansukirman.githubsearch.data.remote.response.Item
 import com.irfanirawansukirman.githubsearch.data.remote.response.User
 import com.irfanirawansukirman.githubsearch.databinding.MainActivityBinding
+import com.irfanirawansukirman.githubsearch.util.CtTest
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.main_activity.*
+import java.text.SimpleDateFormat
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
@@ -54,6 +56,16 @@ class MainActivity : BaseActivity<MainVM, MainActivityBinding>(MainActivityBindi
     override fun onFirstLaunch(savedInstanceState: Bundle?) {
         setupUserListAdapter()
         setupUserListRecyclerView()
+
+        CtTest.apply {
+            Factorial(3)
+            ValueLevel(123456)
+
+            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm")
+            val date1 = "2020-10-02 12:12"
+            val date2 = "2020-11-04 12:12"
+            Duration(sdf.parse(date1), sdf.parse(date2))
+        }
     }
 
     override fun continuousCall() {}

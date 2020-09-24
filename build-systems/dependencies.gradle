@@ -16,7 +16,7 @@ ext {
     ]
 
     appConfig = [
-            appId       : "com.irfanirawansukirman.githubsearch",
+            appId       : "comtest.ct.cd.irfanirawansukirman",
             nameTitle   : "Pipileman",
             nameTitleDev: "Pipileman - Dev",
             nameVersion : "1.0.0",
