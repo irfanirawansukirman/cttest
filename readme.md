@@ -5,7 +5,7 @@ An android application that is used to search for members on the github.com webs
 ## Installation
 Clone this repository and import into **Android Studio**
 ```bash
-git clone https://github.com/irfanirawansukirman/github-search.git
+git clone https://github.com/irfanirawansukirman/cttest.git
 ```
 
 ## No Special Configuration, Just Clone and Run App :)
